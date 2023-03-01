@@ -4,13 +4,50 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webpack Starter Kit</title>
+  <title>Overlook Hotel</title>
 </head>
 <body>
-  <img src="./images/turing-logo.png" alt="turing logo">
-  
-  <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
+  <header>
+    <h1>Overlook Hotel</h1>
+  </header>
+  <section id="bookARoom">
+    <h2>Book a Room</h2>
+    <form>
+      <label for="date">Select a Date:</label>
+      <input type="date" id="date" name="date">
+      <label for="room-type"> Select a Room:</label>
+      <select id="roomType" name="room-type">
+        <option value="single room">Single Room</option>
+        <option value="junior suite">Juniour Suite</option>
+        <option value="suite">Suite</option>
+        <option value="residential suite">Residential Suite</option>
+      </select>
+        <button id="searchRooms">Search Rooms</button>
+    </form>
+    <h3>Available Rooms:</h3>
+      <ul id="available-rooms">
+        <!-- render in JS -->
+      </ul>
+      <button id="bookRoom" disabled>Book Room</button>
+      <p id="noRoomMsg"></p>
+  </section>
+  <section id="bookings">
+    <h2>My Bookings:</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Room Number</th>
+          <th>Room Type</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody id="bookingDetails">
+        <!--render in JS -->
+      </tbody>
+    </table>
+    <p>Total amount spent: <span id="totalSpent"></span></p>
+  </section>
   <script src="bundle.js"></script>
-
 </body>
 </html>
