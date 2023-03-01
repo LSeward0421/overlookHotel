@@ -1,3 +1,134 @@
 body {
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+  background-color: #222;
+  color: #fff;
+  font-family: "Cinzel", sans-serif;
+}
+
+header {
+  background: linear-gradient(to right, #d34242, #f0a4a4);
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  flex: 1;
+}
+
+.header-right {
+  text-align: right;
+  text-shadow: 2px 2px 5px #000;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+#bookARoom,
+#bookings {
+  width: 45%;
+}
+
+h1 {
+  font-size: 3em;
+  margin: 0;
+  text-shadow: 2px 2px 5px #000;
+}
+
+section {
+  margin: 2em 0;
+  padding: 2em;
+  background-color: #333;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+  font-size: 2em;
+  margin-top: 0;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  align-items: center;
+}
+
+label {
+  font-size: 1.2em;
+  flex-basis: 100%;
+}
+
+input[type="date"],
+select {
+  padding: 0.5em;
+  font-size: 1.2em;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  border-radius: 0.5em;
+}
+
+button {
+  background-color: #d34242;
+  color: #fff;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c94444;
+  color: #fff;
+  border: none;
+  border-radius: 0.5em;
+  box-shadow: 0 0 1em #c94444;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em 0;
+  border-bottom: 1px solid #555;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #555;
+}
+
+th,
+td {
+  padding: 0.5em;
+  text-align: left;
+}
+
+th {
+  background-color: #444;
+  color: #fff;
+  border-bottom: 1px solid #555;
+}
+
+#noRoomMsg {
+  color: #d34242;
+  font-style: italic;
+}
+
+#bookRoom:disabled {
+  background-color: #777;
+  cursor: not-allowed;
 }
