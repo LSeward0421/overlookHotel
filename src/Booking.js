@@ -1,23 +1,32 @@
 class Booking {
-  constructor(id, userId, date, roomNumber){
+  constructor(id, userId, date, roomNumber, roomsData) {
     this.id = id;
     this.userId = userId;
     this.date = date;
     this.roomNumber = roomNumber;
+    this.roomsData = roomsData;
   }
 
   getBookingDetails() {
-    // find the room number and set to this.roomNumber
-    // calculate the price
-    // create a booking object for each room property???
+    const room = this.roomsData.find((room) => room.number === this.roomNumber);
+    const booking = {
+      date: this.date,
+      roomNumber: this.roomNumber,
+      roomType: room.roomType,
+      price: this.calculateBookingPrice(),
+    };
+    return booking;
   }
   calculateBookingPrice() {
-    // this.roomNumber 
-    // only book 1 night
-    // 
+    const room = this.roomsData.find((room) => room.number === this.roomNumber);
+    const price = room.costPerNight;
+    return price;
   }
   cancelBooking() {
-
+    this.id = null;
+    this.userId = null;
+    this.date = null;
+    this.roomNumber = null;
   }
 }
 

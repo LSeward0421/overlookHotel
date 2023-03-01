@@ -11,9 +11,6 @@ class Room {
   getBooked() {
     this.isBooked = true;
   }
-  cancelBooking() {
-    this.isBooked = false;
-  }
-};
+}
 
 export default Room;
