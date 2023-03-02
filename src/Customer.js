@@ -6,7 +6,9 @@ class Customer {
     this.totalSpent = 0;
   }
   bookRoom(room) {
-    this.bookings.push(room);
+    if (!this.bookings.includes(room)) {
+      this.bookings.push(room);
+    } 
     this.calculateTotalSpent();
   }
   cancelBooking(booking) {
