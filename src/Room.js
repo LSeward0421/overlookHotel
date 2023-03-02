@@ -9,8 +9,10 @@ class Room {
     this.isBooked = false;
   }
   getBooked() {
-    this.isBooked = true;
+    if (!this.booked === true) {
+      this.isBooked = true;
+    }
   }
-}
+};
 
 export default Room;
