@@ -9,19 +9,25 @@ class Booking {
 
   getBookingDetails() {
     const room = this.roomsData.find((room) => room.number === this.roomNumber);
-    const booking = {
-      date: this.date,
-      roomNumber: this.roomNumber,
-      roomType: room.roomType,
-      price: this.calculateBookingPrice(),
-    };
-    return booking;
+    if (room) {
+      const booking = {
+        date: this.date,
+        roomNumber: this.roomNumber,
+        roomType: room.roomType,
+        price: this.calculateBookingPrice(),
+      };
+      return booking;
+    } else {
+      return null;
+    }
   }
+
   calculateBookingPrice() {
     const room = this.roomsData.find((room) => room.number === this.roomNumber);
     const price = room.costPerNight;
     return price;
   }
+
   cancelBooking() {
     this.id = null;
     this.userId = null;
