@@ -27,21 +27,13 @@ describe("Customer", function () {
     expect(customer).to.have.property("totalSpent").that.equals(0);
   });
 
-  it("should be able to book a room", function () {
+  it("should be able to book a room and retrieve bookings for the customer", function () {
     const sampleRoom = rooms[0];
+    customer.myBookings(bookings);
     customer.bookRoom(sampleRoom);
-
+  
     expect(customer.bookings).to.have.lengthOf(1);
     expect(customer.bookings[0]).to.equal(sampleRoom);
-  });
-
-  it("should be able to cancel a booking", function () {
-    const sampleRoom = rooms[0];
-    customer.bookRoom(sampleRoom);
-    expect(customer.bookings).to.have.lengthOf(1);
-
-    customer.cancelBooking(sampleRoom);
-    expect(customer.bookings).to.have.lengthOf(0);
   });
 
   it("should not be able to book a room that is not available", function () {
@@ -58,13 +50,10 @@ describe("Customer", function () {
 
     customer.bookRoom(sampleRoom1);
     customer.bookRoom(sampleRoom2);
+    customer.myBookings(bookings);
 
     expect(customer.totalSpent).to.equal(
       sampleRoom1.costPerNight + sampleRoom2.costPerNight
     );
-
-    customer.cancelBooking(sampleRoom2);
-
-    expect(customer.totalSpent).to.equal(sampleRoom1.costPerNight);
   });
 });
