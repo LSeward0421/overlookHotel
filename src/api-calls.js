@@ -18,7 +18,7 @@ function postData(postObj) {
       'Content-type': 'application/json'
     }
   });
-}
+};
 
 function deleteData(id) {
   return fetch(`http://localhost:3001/api/v1/bookings/${id}`, {
@@ -27,6 +27,6 @@ function deleteData(id) {
       'Content-type': 'application/json'
     }
   });
-}
+};
 
 export { getData, postData, deleteData };
