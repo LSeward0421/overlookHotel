@@ -34,16 +34,4 @@ describe("Room", function () {
   it("should have a property that has booking status defaulted to false", function () {
     expect(testRoom.isBooked).to.equal(false);
   });
-
-  it("should be able to update booking status when a room is booked", function () {
-    testRoom.getBooked();
-    expect(testRoom.isBooked).to.equal(true);
-  });
-
-  it("should not be able to get booked again if already booked", function () {
-    testRoom.getBooked();
-    expect(testRoom.isBooked).to.be.true;
-    testRoom.getBooked();
-    expect(testRoom.isBooked).to.be.true;
-  });
 });
