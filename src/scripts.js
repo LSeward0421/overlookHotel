@@ -32,6 +32,10 @@ searchRoomsBtn.addEventListener("click", (event) => {
  displayAvailableRooms(availableRooms);
 })
 
+// bookRoomBtn.addEventListener("click", () => {
+
+// })
+
 // when click booked room, create a booking object(must include userID, room# and date)
 // need to be able to click on one of the rooms to select and when you click the room, the data updates 
 // event listeners to each available room that listens for a click
@@ -60,14 +64,18 @@ function fetchData() {
     });
 }
 
+
 function displayAvailableRooms(availableRooms) {
   const availableRoomsList = document.querySelector("#available-rooms");
   availableRoomsList.innerHTML = "";
 
   if (availableRooms.length > 0) {
-    availableRooms.forEach((room) => {
+    availableRooms.forEach(room => {
       const li = document.createElement("li");
-      li.textContent = `Room ${room.number}, ${room.roomType}, ${room.bidet ? "with bidet" : "without bidet"}, ${room.numBeds} ${room.bedSize} bed(s), $${room.costPerNight} per night`;
+      li.innerHTML = `
+        <span>Room ${room.number}, ${room.roomType}, ${room.bidet ? "with bidet" : "without bidet"}, ${room.numBeds} ${room.bedSize} bed(s), $${room.costPerNight} per night</span>
+        <button class="book-room-btn" data-room-number="${room.number}">Book Room</button>
+      `;
       availableRoomsList.appendChild(li);
     });
   } else {
