@@ -4,31 +4,28 @@ class Customer {
     this.name = customer.name;
     this.bookings = [];
     this.totalSpent = 0;
+    this.selectedRoom = null;
   }
-
+  selectRoom(room) {
+    this.selectedRoom = room;
+  }
+  
   bookRoom(room) {
     if (!this.bookings.includes(room)) {
       this.bookings.push(room);
     } 
     this.calculateTotalSpent();
   }
-  
+
   myBookings(bookingData) {
     this.bookings = bookingData.filter(booking => booking.userID === this.id);
   }
 
-  findAvailableRooms(allBookings, allRooms, date) {
+  findAvailableRooms(allBookings, allRooms, date, roomType) {
     const bookedRoomNumbers = allBookings
       .filter(booking => booking.date === date)
       .map(booking => booking.roomNumber);
-
-    const availableRooms = allRooms.filter(room => {
-      if (bookedRoomNumbers.includes(room.number)) {
-        return false;
-      }
-      return true;
-    });
-
+    const availableRooms = allRooms.filter(room => !bookedRoomNumbers.includes(room.number) && room.roomType === roomType);
     return availableRooms;
   }
   
