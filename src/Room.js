@@ -8,11 +8,6 @@ class Room {
     this.costPerNight = roomData.costPerNight;
     this.isBooked = false;
   }
-  getBooked() {
-    if (!this.booked === true) {
-      this.isBooked = true;
-    }
-  }
 };
 
 export default Room;
