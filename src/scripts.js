@@ -98,7 +98,7 @@ function displayAvailableRooms(availableRooms) {
 }
 
 function setCustomer() {
-  selectedCustomer = customers[0];
+  selectedCustomer = customers[5];
 }
 
 function displayUserBookings(customer) {
@@ -134,6 +134,7 @@ function postBooking(selectedRoomNumber) {
       console.log("POST request successful:", response);
       selectedCustomer.bookRoom(selectedRoom);
       displayUserBookings(selectedCustomer);
+      displayTotalSpent();
     })
     .catch((error) => {
       console.log(error);
