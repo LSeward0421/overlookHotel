@@ -10,8 +10,6 @@ const dateInput = document.querySelector("#date");
 const roomTypeSelect = document.querySelector("#roomType");
 const searchRoomsBtn = document.querySelector("#searchRooms");
 const availableRoomsList = document.querySelector("#available-rooms");
-const bookRoomBtn = document.querySelector("#bookRoom");
-const noRoomMsg = document.querySelector("#noRoomMsg");
 const bookingDetails = document.querySelector("#bookingDetails");
 const totalSpent = document.querySelector("#totalSpent");
 
@@ -19,40 +17,32 @@ let customers, rooms, bookings, selectedCustomer;
 
 // event listeners
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("load", () => {
   fetchData();
+  setCustomer()
 });
 
 searchRoomsBtn.addEventListener("click", (event) => {
-  event.preventDefault()
-  const selectedDate = dateInput.value.replaceAll('-', '/');
-  const selectedRoomType = roomTypeSelect.value;
-  const availableRooms = selectedCustomer.findAvailableRooms(bookings, rooms, selectedDate, selectedRoomType)
-  console.log('available rooms', availableRooms);
-  displayAvailableRooms(availableRooms);
-})
+  event.preventDefault();
+  searchRooms();
+});
 
-// when click booked room, create a booking object(must include userID, room# and date)
-// need to be able to click on one of the rooms to select and when you click the room, the data updates 
-// event listeners to each available room that listens for a click
-// on the click, selectedroom on customer is updated
-// then event listener for the book button 
-// access ID and room number from selected customer and then the date from the form 
 // create a new booking object with that data and then post
 // update table on DOM with booking data
 
-// send that object in a post request to the server
 
 // functions
 
 function fetchData() {
   Promise.all([getData("customers"), getData("rooms"), getData("bookings")])
     .then(([customersData, roomsData, bookingsData]) => {
-      customers = customersData.customers.map((customer) => new Customer(customer));
+      customers = customersData.customers.map(
+        (customer) => new Customer(customer)
+      );
       rooms = roomsData.rooms.map((room) => new Room(room));
       bookings = bookingsData.bookings.map((booking) => new Booking(booking));
       console.log(customers, rooms, bookings);
-      setCustomer()
+      setCustomer();
       if (selectedCustomer) {
         displayUserBookings(selectedCustomer);
       }
@@ -64,33 +54,58 @@ function fetchData() {
     });
 }
 
+function searchRooms() {
+  const selectedDate = dateInput.value.replace(/-/g, "/");
+  const selectedRoomType = roomTypeSelect.value;
+  const availableRooms = selectedCustomer.findAvailableRooms(
+    bookings,
+    rooms,
+    selectedDate,
+    selectedRoomType
+  );
+  fetchData();
+  displayAvailableRooms(availableRooms);
+}
 
 function displayAvailableRooms(availableRooms) {
   availableRoomsList.innerHTML = "";
   if (availableRooms.length > 0) {
-    availableRooms.forEach(room => {
+    availableRooms.forEach((room) => {
       const li = document.createElement("li");
       li.innerHTML = `
-        <span>Room ${room.number}, ${room.roomType}, ${room.bidet ? "with bidet" : "without bidet"}, ${room.numBeds} ${room.bedSize} bed(s), $${room.costPerNight} per night</span>
-        <button class="book-room-btn" data-room-number="${room.number}">Book Room</button>`;
+        <span>Room ${room.number}, ${room.roomType}, ${
+        room.bidet ? "with bidet" : "without bidet"
+      }, ${room.numBeds} ${room.bedSize} bed(s), $${
+        room.costPerNight
+      } per night</span>
+        <button class="book-room-btn" data-room-number="${room.number}" id=${room.number}>Book Room</button>`;
       availableRoomsList.appendChild(li);
+    });
+    availableRooms.forEach((room) => {
+      document
+        .getElementById(`${room.number}`)
+        .addEventListener("click", (event) => {
+          const roomNumber = event.target.id;
+          postBooking(roomNumber);
+        });
     });
   } else {
     const li = document.createElement("li");
-    li.textContent = "No rooms available for this date";
+    li.textContent =
+      "We sincerely apologize. There are no rooms available on that date.";
     availableRoomsList.appendChild(li);
   }
 }
 
 function setCustomer() {
-  selectedCustomer = customers[2]; 
+  selectedCustomer = customers[0];
 }
 
 function displayUserBookings(customer) {
-  let customerBookings = customer.myBookings(bookings)
+  let customerBookings = customer.myBookings(bookings);
 
   bookingDetails.innerHTML = "";
-  customerBookings.forEach(booking => {
+  customerBookings.forEach((booking) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${booking.date}</td>
@@ -100,8 +115,28 @@ function displayUserBookings(customer) {
 }
 
 function displayTotalSpent() {
-    selectedCustomer.calculateTotalSpent(rooms);
-    totalSpent.textContent = `$${selectedCustomer.totalSpent.toFixed(2)}`;
+  selectedCustomer.calculateTotalSpent(rooms);
+  totalSpent.textContent = `$${selectedCustomer.totalSpent.toFixed(2)}`;
+}
 
+function postBooking(selectedRoomNumber) {
+  const selectedRoom = rooms.find((room) => room.number === selectedRoomNumber);
+
+  selectedCustomer.selectRoom(selectedRoom);
+  const selectedDate = dateInput.value.replace(/-/g, "/");
+  const bookingData = {
+    userID: selectedCustomer.id,
+    date: selectedDate,
+    roomNumber: parseInt(selectedRoomNumber),
+  };
+  postData(bookingData)
+    .then((response) => {
+      console.log("POST request successful:", response);
+      selectedCustomer.bookRoom(selectedRoom);
+      displayUserBookings(selectedCustomer);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 }
 

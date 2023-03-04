@@ -11,14 +11,26 @@ function getData (type) {
 };
 
 function postData(postObj) {
+  console.log('postData called with', postObj);
   return fetch(`http://localhost:3001/api/v1/bookings`, {
     method: 'POST',
     body: JSON.stringify(postObj),
     headers: {
       'Content-type': 'application/json'
     }
-  });
-};
+  })
+    .then(response => {
+      console.log('POST request successful:', response);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      console.log('Error caught:', error);
+    });
+}
+
 
 function deleteData(id) {
   return fetch(`http://localhost:3001/api/v1/bookings/${id}`, {
