@@ -9,16 +9,16 @@ class Customer {
   selectRoom(room) {
     this.selectedRoom = room;
   }
-  
+
   bookRoom(room) {
     if (!this.bookings.includes(room)) {
       this.bookings.push(room);
-    } 
-    this.calculateTotalSpent();
+    }
+    return this.bookings
   }
 
   myBookings(bookingData) {
-    this.bookings = bookingData.filter(booking => booking.userID === this.id);
+    return this.bookings = bookingData.filter(booking => booking.userId === this.id);
   }
 
   findAvailableRooms(allBookings, allRooms, date, roomType) {
@@ -29,10 +29,13 @@ class Customer {
     return availableRooms;
   }
   
-  calculateTotalSpent() {
-    this.totalSpent = this.bookings.reduce((total, room) => {
-      return total + room.costPerNight;
+  calculateTotalSpent(allRooms) {
+    this.totalSpent = this.bookings.reduce((total, booked) => {
+      total += allRooms.find(room => room.number === booked.roomNumber).costPerNight
+      return total;
     }, 0);
+    
+    return this.totalSpent;
   }
 }
 
