@@ -11,7 +11,7 @@
     <title>Overlook Hotel</title>
   </head>
   <body>
-    <header>
+    <header role="banner">
       <div class="header-left">
         <h1>Overlook Hotel</h1>
       </div>
@@ -19,14 +19,14 @@
         <h2>You're dying to stay with us.</h2>
       </div>
     </header>
-    <div class="container">
+    <div class="container" role="main">
       <section id="bookARoom">
-        <h2>Book a Room</h2>
-        <form>
+        <h2 id="bookARoom">Book a Room</h2>
+        <form aria-labelledby="bookARoom">
           <label for="date">Select a Date:</label>
           <input type="date" id="date" name="date" />
-          <label for="room-type"> Select a Room:</label>
-          <select id="roomType" name="room-type">
+          <label for="roomType"> Select a Room:</label>
+          <select id="roomType" name="roomType">
             <option value="single room">Single Room</option>
             <option value="junior suite">Juniour Suite</option>
             <option value="suite">Suite</option>
@@ -36,9 +36,7 @@
         </form>
         <h3>Available Rooms:</h3>
         <ul id="available-rooms">
-          <!-- render in JS -->
         </ul>
-        <!-- <button id="bookRoom" disabled>Book Room</button> -->
         <p id="noRoomMsg"></p>
       </section>
       <section id="bookings">
@@ -51,7 +49,6 @@
             </tr>
           </thead>
           <tbody id="bookingDetails">
-            <!--render in JS -->
           </tbody>
         </table>
         <p>Total amount spent: <span id="totalSpent"></span></p>
@@ -60,3 +57,4 @@
     <script src="bundle.js"></script>
   </body>
 </html>
+
