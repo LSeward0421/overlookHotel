@@ -37,6 +37,6 @@ class Customer {
     
     return this.totalSpent;
   }
-}
+} 
 
 export default Customer;

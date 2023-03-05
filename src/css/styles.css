@@ -30,6 +30,7 @@ header {
 
 #bookARoom,
 #bookings {
+  display: none;
   width: 45%;
 }
 

@@ -1,4 +1,3 @@
-// An example of how you tell webpack to use a CSS (SCSS) file
 import "./css/styles.css";
 import Customer from "./Customer";
 import Room from "./Room";
@@ -12,6 +11,8 @@ const searchRoomsBtn = document.querySelector("#searchRooms");
 const availableRoomsList = document.querySelector("#available-rooms");
 const bookingDetails = document.querySelector("#bookingDetails");
 const totalSpent = document.querySelector("#totalSpent");
+const loginForm = document.querySelector('#login form');
+const mainContent = document.querySelector('.container');
 
 let customers, rooms, bookings, selectedCustomer;
 
@@ -19,7 +20,6 @@ let customers, rooms, bookings, selectedCustomer;
 
 window.addEventListener("load", () => {
   fetchData();
-  setCustomer()
 });
 
 searchRoomsBtn.addEventListener("click", (event) => {
@@ -27,9 +27,23 @@ searchRoomsBtn.addEventListener("click", (event) => {
   searchRooms();
 });
 
-// create a new booking object with that data and then post
-// update table on DOM with booking data
+loginForm.addEventListener('submit', (event) => {
+  event.preventDefault();
 
+  const username = document.querySelector('#username').value;
+  const password = document.querySelector('#password').value;
+
+  if (username === 'customer7' && password === 'overlook2021') {
+    mainContent.style.display = 'flex';
+    document.querySelector('#login').style.display = 'none';
+    document.querySelector('#bookARoom').style.display = 'block';
+    document.querySelector('#bookings').style.display = 'block';
+    setCustomer()
+    console.log(selectedCustomer)
+  } else {
+    alert('Invalid username or password');
+  }
+});
 
 // functions
 
@@ -92,13 +106,13 @@ function displayAvailableRooms(availableRooms) {
   } else {
     const li = document.createElement("li");
     li.textContent =
-      "We sincerely apologize. There are no rooms available on that date.";
+      "We sincerely apologize. There are no rooms available on that date. Please make another selection.";
     availableRoomsList.appendChild(li);
   }
 }
 
 function setCustomer() {
-  selectedCustomer = customers[5];
+  selectedCustomer = customers[6];
 }
 
 function displayUserBookings(customer) {
