@@ -151,6 +151,7 @@ function postBooking(selectedRoomNumber) {
     refreshData();
   })
   const bookingButton = document.getElementById(`${selectedRoomNumber}`)
+  bookingButton.innerText = 'test'
   bookingButton.disabled = true;
 }
 

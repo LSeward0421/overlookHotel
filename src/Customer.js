@@ -4,10 +4,6 @@ class Customer {
     this.name = customer.name;
     this.bookings = [];
     this.totalSpent = 0;
-    this.selectedRoom = null;
-  }
-  selectRoom(room) {
-    this.selectedRoom = room;
   }
 
   bookRoom(booking) {
@@ -17,10 +13,14 @@ class Customer {
     return this.bookings;
   }
   
-
   myBookings(bookingData) {
-    return this.bookings = bookingData.filter(booking => booking.userId === this.id);
+    this.bookings = bookingData.filter(booking => booking.userId === this.id);
+    this.bookings.sort((a, b) => {
+      return new Date(b.date) - new Date(a.date);
+    });
+    return this.bookings;
   }
+  
 
   findAvailableRooms(allBookings, allRooms, date, roomType) {
     const bookedRoomNumbers = allBookings
