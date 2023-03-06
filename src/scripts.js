@@ -1,4 +1,3 @@
-// An example of how you tell webpack to use a CSS (SCSS) file
 import "./css/styles.css";
 import Customer from "./Customer";
 import Room from "./Room";
@@ -12,14 +11,17 @@ const searchRoomsBtn = document.querySelector("#searchRooms");
 const availableRoomsList = document.querySelector("#available-rooms");
 const bookingDetails = document.querySelector("#bookingDetails");
 const totalSpent = document.querySelector("#totalSpent");
+const loginForm = document.querySelector("#login");
+const loginErrorMsg = document.querySelector("#loginErrorMessage");
+const mainContent = document.querySelector(".container");
+const errorMessage = document.querySelector("#errorMessage");
 
-let customers, rooms, bookings, selectedCustomer;
+let customers, rooms, bookings, selectedCustomer, availableRooms;
 
 // event listeners
 
 window.addEventListener("load", () => {
   fetchData();
-  setCustomer()
 });
 
 searchRoomsBtn.addEventListener("click", (event) => {
@@ -27,43 +29,39 @@ searchRoomsBtn.addEventListener("click", (event) => {
   searchRooms();
 });
 
-// create a new booking object with that data and then post
-// update table on DOM with booking data
-
+loginForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  verifyLogin();
+});
 
 // functions
 
 function fetchData() {
-  Promise.all([getData("customers"), getData("rooms"), getData("bookings")])
+  return Promise.all([
+    getData("customers"),
+    getData("rooms"),
+    getData("bookings"),
+  ])
     .then(([customersData, roomsData, bookingsData]) => {
       customers = customersData.customers.map(
         (customer) => new Customer(customer)
       );
       rooms = roomsData.rooms.map((room) => new Room(room));
       bookings = bookingsData.bookings.map((booking) => new Booking(booking));
-      console.log(customers, rooms, bookings);
-      setCustomer();
-      if (selectedCustomer) {
-        displayUserBookings(selectedCustomer);
-      }
-      displayTotalSpent();
       return { customers, rooms, bookings };
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch(errorHandler);
 }
 
 function searchRooms() {
   const selectedDate = dateInput.value.replace(/-/g, "/");
   const selectedRoomType = roomTypeSelect.value;
-  const availableRooms = selectedCustomer.findAvailableRooms(
+  availableRooms = selectedCustomer.findAvailableRooms(
     bookings,
     rooms,
     selectedDate,
     selectedRoomType
   );
-  fetchData();
   displayAvailableRooms(availableRooms);
 }
 
@@ -78,7 +76,9 @@ function displayAvailableRooms(availableRooms) {
       }, ${room.numBeds} ${room.bedSize} bed(s), $${
         room.costPerNight
       } per night</span>
-        <button class="book-room-btn" data-room-number="${room.number}" id=${room.number}>Book Room</button>`;
+        <button class="book-room-btn" data-room-number="${room.number}" id=${
+        room.number
+      }>Book Room</button>`;
       availableRoomsList.appendChild(li);
     });
     availableRooms.forEach((room) => {
@@ -92,18 +92,45 @@ function displayAvailableRooms(availableRooms) {
   } else {
     const li = document.createElement("li");
     li.textContent =
-      "We sincerely apologize. There are no rooms available on that date.";
+      "We sincerely apologize. There are no more rooms available on this date. Please make another selection.";
     availableRoomsList.appendChild(li);
   }
 }
 
-function setCustomer() {
-  selectedCustomer = customers[5];
+function verifyLogin() {
+  const username = document.querySelector("#username").value;
+  const password = document.querySelector("#password").value;
+
+  const matchingCustomer = customers.find((customer) => username === `customer${customer.id}` && password === "overlook2021");
+
+  if (matchingCustomer) {
+    setCustomer(matchingCustomer.id)
+      .then(() => {
+        mainContent.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+      })
+      .catch((error) => console.log(error));
+  } else {
+    loginErrorMsg.classList.remove("hidden");
+  }
 }
+
+function setCustomer(customerId) {
+  return getData(`customers/${customerId}`)
+    .then((customerData) => {
+      console.log("get single customer data", customerData);
+      selectedCustomer = new Customer(customerData);
+      console.log(customerData);
+      displayUserBookings(selectedCustomer);
+      displayTotalSpent();
+    })
+    .catch((error) => console.log(error));
+}
+
 
 function displayUserBookings(customer) {
   let customerBookings = customer.myBookings(bookings);
-
+  console.log(customerBookings);
   bookingDetails.innerHTML = "";
   customerBookings.forEach((booking) => {
     const row = document.createElement("tr");
@@ -117,27 +144,36 @@ function displayUserBookings(customer) {
 function displayTotalSpent() {
   selectedCustomer.calculateTotalSpent(rooms);
   totalSpent.textContent = `$${selectedCustomer.totalSpent.toFixed(2)}`;
+  console.log("selectedCustomer.totalSpent:", selectedCustomer.totalSpent);
 }
 
 function postBooking(selectedRoomNumber) {
-  const selectedRoom = rooms.find((room) => room.number === selectedRoomNumber);
-
-  selectedCustomer.selectRoom(selectedRoom);
   const selectedDate = dateInput.value.replace(/-/g, "/");
   const bookingData = {
     userID: selectedCustomer.id,
     date: selectedDate,
     roomNumber: parseInt(selectedRoomNumber),
   };
+  errorMessage.classList.add("hidden");
   postData(bookingData)
     .then((response) => {
-      console.log("POST request successful:", response);
-      selectedCustomer.bookRoom(selectedRoom);
-      displayUserBookings(selectedCustomer);
-      displayTotalSpent();
+      selectedCustomer.bookRoom(response);
+      bookings.push(new Booking(response));
+      console.log(bookings);
+      console.log(selectedCustomer.bookings);
+      return fetchData();
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .then(refreshDOM);
 }
 
+function refreshDOM() {
+  searchRooms();
+  displayUserBookings(selectedCustomer);
+  displayTotalSpent();
+}
+
+export function errorHandler(error) {
+  errorMessage.classList.remove("hidden");
+  errorMessage.textContent = `Uh-oh! Something went wrong! Try again Later!`;
+  console.log(error);
+}

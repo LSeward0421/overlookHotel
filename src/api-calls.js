@@ -1,3 +1,6 @@
+import Booking from "./Booking"
+import { errorHandler } from "./scripts";
+
 function getData (type) {
   return fetch(`http://localhost:3001/api/v1/${type}`)
     .then((response) => {
@@ -11,7 +14,6 @@ function getData (type) {
 };
 
 function postData(postObj) {
-  console.log('postData called with', postObj);
   return fetch(`http://localhost:3001/api/v1/bookings`, {
     method: 'POST',
     body: JSON.stringify(postObj),
@@ -26,11 +28,8 @@ function postData(postObj) {
       }
       return response.json();
     })
-    .catch((error) => {
-      console.log('Error caught:', error);
-    });
+    .catch(errorHandler);
 }
-
 
 function deleteData(id) {
   return fetch(`http://localhost:3001/api/v1/bookings/${id}`, {

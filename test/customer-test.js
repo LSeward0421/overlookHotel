@@ -45,15 +45,13 @@ describe("Customer", function () {
   });
 
   it("should calculate the total spent", function () {
-    const sampleRoom1 = rooms[0];
-    const sampleRoom2 = rooms[1];
+   const sampleBooking1 = bookings[0];
+   const sampleBooking2 = bookings[1];
 
-    customer.bookRoom(sampleRoom1);
-    customer.bookRoom(sampleRoom2);
-    customer.myBookings(bookings);
 
-    expect(customer.totalSpent).to.equal(
-      sampleRoom1.costPerNight + sampleRoom2.costPerNight
-    );
+    customer.bookRoom(sampleBooking1);
+    customer.bookRoom(sampleBooking2);
+
+    expect(customer.calculateTotalSpent(rooms)).to.equal(835.78);
   });
 });
