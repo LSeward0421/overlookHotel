@@ -10,12 +10,13 @@ class Customer {
     this.selectedRoom = room;
   }
 
-  bookRoom(room) {
-    if (!this.bookings.includes(room)) {
-      this.bookings.push(room);
+  bookRoom(booking) {
+    if (!this.bookings.find(b => b.id === booking.id)) {
+      this.bookings.push(booking);
     }
-    return this.bookings
+    return this.bookings;
   }
+  
 
   myBookings(bookingData) {
     return this.bookings = bookingData.filter(booking => booking.userId === this.id);
