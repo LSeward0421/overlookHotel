@@ -11,10 +11,11 @@ const searchRoomsBtn = document.querySelector("#searchRooms");
 const availableRoomsList = document.querySelector("#available-rooms");
 const bookingDetails = document.querySelector("#bookingDetails");
 const totalSpent = document.querySelector("#totalSpent");
-const loginForm = document.querySelector('#login form');
-const mainContent = document.querySelector('.container');
+const loginForm = document.querySelector("#login");
+const loginErrorMsg = document.querySelector("#loginErrorMessage");
+const mainContent = document.querySelector(".container");
 
-let customers, rooms, bookings, selectedCustomer, availableRooms
+let customers, rooms, bookings, selectedCustomer, availableRooms;
 
 // event listeners
 
@@ -27,36 +28,22 @@ searchRoomsBtn.addEventListener("click", (event) => {
   searchRooms();
 });
 
-loginForm.addEventListener('submit', (event) => {
+loginForm.addEventListener("submit", (event) => {
   event.preventDefault();
-
-  const username = document.querySelector('#username').value;
-  const password = document.querySelector('#password').value;
-
-  const matchingCustomer = customers.find(customer => username === `customer${customer.id}` && password === 'overlook2021');
-  
-  if (matchingCustomer) {
-    setCustomer(matchingCustomer.id);
-    mainContent.style.display = 'flex';
-    document.querySelector('#login').style.display = 'none';
-    document.querySelector('#bookARoom').style.display = 'flex';
-    document.querySelector('#bookings').style.display = 'flex';
-  } else {
-    alert('Invalid username or password');
-  }
+  verifyLogin();
 });
-
-
-
 
 // functions
 
 function fetchData() {
   Promise.all([getData("customers"), getData("rooms"), getData("bookings")])
     .then(([customersData, roomsData, bookingsData]) => {
-      customers = customersData.customers.map((customer) => new Customer(customer));
+      customers = customersData.customers.map(
+        (customer) => new Customer(customer)
+      );
       rooms = roomsData.rooms.map((room) => new Room(room));
       bookings = bookingsData.bookings.map((booking) => new Booking(booking));
+      return { customers, rooms, bookings };
     })
     .catch((error) => {
       console.log(error);
@@ -86,11 +73,15 @@ function displayAvailableRooms(availableRooms) {
       }, ${room.numBeds} ${room.bedSize} bed(s), $${
         room.costPerNight
       } per night</span>
-        <button class="book-room-btn" data-room-number="${room.number}" id=${room.number}>Book Room</button>`;
+        <button class="book-room-btn" data-room-number="${room.number}" id=${
+        room.number
+      }>Book Room</button>`;
       availableRoomsList.appendChild(li);
     });
     availableRooms.forEach((room) => {
-      document.getElementById(`${room.number}`).addEventListener("click", (event) => {
+      document
+        .getElementById(`${room.number}`)
+        .addEventListener("click", (event) => {
           const roomNumber = event.target.id;
           postBooking(roomNumber);
         });
@@ -98,27 +89,44 @@ function displayAvailableRooms(availableRooms) {
   } else {
     const li = document.createElement("li");
     li.textContent =
-      "We sincerely apologize. There are no rooms available on that date. Please make another selection.";
+      "We sincerely apologize. There are no more rooms available on this date. Please make another selection.";
     availableRoomsList.appendChild(li);
+  }
+}
+
+function verifyLogin() {
+  const username = document.querySelector("#username").value;
+  const password = document.querySelector("#password").value;
+
+  const matchingCustomer = customers.find(
+    (customer) =>
+      username === `customer${customer.id}` && password === "overlook2021"
+  );
+
+  if (matchingCustomer) {
+    setCustomer(matchingCustomer.id);
+    mainContent.classList.remove("hidden");
+    loginForm.classList.add("hidden");
+  } else {
+    loginErrorMsg.classList.remove("hidden");
   }
 }
 
 function setCustomer(customerId) {
   getData(`customers/${customerId}`)
-    .then(customerData => {
-      console.log('get single customer data', customerData)
+    .then((customerData) => {
+      console.log("get single customer data", customerData);
       selectedCustomer = new Customer(customerData);
       console.log(customerData);
       displayUserBookings(selectedCustomer);
       displayTotalSpent();
     })
-    .catch(error => console.log(error));
+    .catch((error) => console.log(error));
 }
-
 
 function displayUserBookings(customer) {
   let customerBookings = customer.myBookings(bookings);
-  console.log(customerBookings)
+  console.log(customerBookings);
   bookingDetails.innerHTML = "";
   customerBookings.forEach((booking) => {
     const row = document.createElement("tr");
@@ -132,7 +140,7 @@ function displayUserBookings(customer) {
 function displayTotalSpent() {
   selectedCustomer.calculateTotalSpent(rooms);
   totalSpent.textContent = `$${selectedCustomer.totalSpent.toFixed(2)}`;
-  console.log('selectedCustomer.totalSpent:', selectedCustomer.totalSpent);
+  console.log("selectedCustomer.totalSpent:", selectedCustomer.totalSpent);
 }
 
 function postBooking(selectedRoomNumber) {
@@ -140,30 +148,15 @@ function postBooking(selectedRoomNumber) {
   const bookingData = {
     userID: selectedCustomer.id,
     date: selectedDate,
-    roomNumber: parseInt(selectedRoomNumber)
+    roomNumber: parseInt(selectedRoomNumber),
   };
-  postData(bookingData)
-  .then(response => {
-    console.log('post data .then response ', response)
-    selectedCustomer.bookRoom(response);
-    bookings.push(new Booking(response));
-    console.log(bookings);
-    refreshData();
-  })
-  const bookingButton = document.getElementById(`${selectedRoomNumber}`)
-  bookingButton.innerText = 'test'
-  bookingButton.disabled = true;
+  postData(bookingData, selectedCustomer, bookings).then(() => {
+    fetchData();
+    setTimeout(() => {
+      searchRooms();
+      displayUserBookings(selectedCustomer);
+      displayTotalSpent();
+    }, 200);
+  });
 }
 
-function refreshData() {
-  fetchData()
-  displayAvailableRooms(availableRooms);
-  displayUserBookings(selectedCustomer);
-  displayTotalSpent();
-}
-
-// can still double book rooms 
-// weird bug with trying to switch room type on same day and not being able to book after booking a room on that day. not sure if that matters?
-// DOM display alllll messed up. 
-// doesn't update the available rooms if I booked a room and then switch to another day 
-// upon logging in, the total.spent is 0 in the console

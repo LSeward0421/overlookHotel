@@ -1,3 +1,5 @@
+import Booking from "./Booking"
+
 function getData (type) {
   return fetch(`http://localhost:3001/api/v1/${type}`)
     .then((response) => {
@@ -10,8 +12,27 @@ function getData (type) {
     .then(response => response.json())
 };
 
-function postData(postObj) {
-  console.log('postData called with', postObj);
+// function postData(postObj) {
+//   return fetch(`http://localhost:3001/api/v1/bookings`, {
+//     method: 'POST',
+//     body: JSON.stringify(postObj),
+//     headers: {
+//       'Content-type': 'application/json'
+//     }
+//   })
+//     .then(response => {
+//       console.log('POST request successful:', response);
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+//       return response.json();
+//     })
+//     .catch((error) => {
+//       console.log('Error caught:', error);
+//     });
+// }
+
+function postData(postObj, selectedCustomer, bookings) {
   return fetch(`http://localhost:3001/api/v1/bookings`, {
     method: 'POST',
     body: JSON.stringify(postObj),
@@ -26,10 +47,17 @@ function postData(postObj) {
       }
       return response.json();
     })
+    .then(response => {
+      selectedCustomer.bookRoom(response);
+      bookings.push(new Booking(response));
+      console.log(bookings);
+      console.log(selectedCustomer.bookings)
+    })
     .catch((error) => {
       console.log('Error caught:', error);
     });
 }
+
 
 
 function deleteData(id) {

@@ -30,7 +30,6 @@ header {
 
 #bookARoom,
 #bookings {
-  display: none;
   width: 45%;
 }
 
@@ -132,4 +131,8 @@ th {
 #bookRoom:disabled {
   background-color: #777;
   cursor: not-allowed;
+}
+
+.hidden {
+  display: none;
 }

@@ -19,7 +19,7 @@
         <h2>You're dying to stay with us.</h2>
       </div>
     </header>
-    <div class="container" role="main">
+    <div class="container hidden" role="main">
       <section id="bookARoom">
         <h2 id="bookARoom">Book a Room</h2>
         <form aria-labelledby="bookARoom">
@@ -53,6 +53,7 @@
         </table>
         <p>Total amount spent: <span id="totalSpent"></span></p>
       </section>
+    </div>  
       <section id="login">
         <h2>Login</h2>
         <form>
@@ -62,8 +63,8 @@
           <input type="password" id="password" name="password">
           <button id="loginBtn">Log In</button>
         </form>
+        <p id="loginErrorMessage" class="hidden">Wrong username or password. Please verify and try again.</p>
       </section>
-    </div>
     <script src="bundle.js"></script>
   </body>
 </html>
