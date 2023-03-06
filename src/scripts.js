@@ -14,7 +14,7 @@ const totalSpent = document.querySelector("#totalSpent");
 const loginForm = document.querySelector("#login");
 const loginErrorMsg = document.querySelector("#loginErrorMessage");
 const mainContent = document.querySelector(".container");
-const errorMessage = document.querySelector('#errorMessage')
+const errorMessage = document.querySelector("#errorMessage");
 
 let customers, rooms, bookings, selectedCustomer, availableRooms;
 
@@ -37,7 +37,11 @@ loginForm.addEventListener("submit", (event) => {
 // functions
 
 function fetchData() {
-  return Promise.all([getData("customers"), getData("rooms"), getData("bookings")])
+  return Promise.all([
+    getData("customers"),
+    getData("rooms"),
+    getData("bookings"),
+  ])
     .then(([customersData, roomsData, bookingsData]) => {
       customers = customersData.customers.map(
         (customer) => new Customer(customer)
@@ -97,22 +101,22 @@ function verifyLogin() {
   const username = document.querySelector("#username").value;
   const password = document.querySelector("#password").value;
 
-  const matchingCustomer = customers.find(
-    (customer) =>
-      username === `customer${customer.id}` && password === "overlook2021"
-  );
+  const matchingCustomer = customers.find((customer) => username === `customer${customer.id}` && password === "overlook2021");
 
   if (matchingCustomer) {
-    setCustomer(matchingCustomer.id);
-    mainContent.classList.remove("hidden");
-    loginForm.classList.add("hidden");
+    setCustomer(matchingCustomer.id)
+      .then(() => {
+        mainContent.classList.remove("hidden");
+        loginForm.classList.add("hidden");
+      })
+      .catch((error) => console.log(error));
   } else {
     loginErrorMsg.classList.remove("hidden");
   }
 }
 
 function setCustomer(customerId) {
-  getData(`customers/${customerId}`)
+  return getData(`customers/${customerId}`)
     .then((customerData) => {
       console.log("get single customer data", customerData);
       selectedCustomer = new Customer(customerData);
@@ -122,6 +126,7 @@ function setCustomer(customerId) {
     })
     .catch((error) => console.log(error));
 }
+
 
 function displayUserBookings(customer) {
   let customerBookings = customer.myBookings(bookings);
@@ -149,16 +154,16 @@ function postBooking(selectedRoomNumber) {
     date: selectedDate,
     roomNumber: parseInt(selectedRoomNumber),
   };
-  errorMessage.classList.add('hidden');
+  errorMessage.classList.add("hidden");
   postData(bookingData)
-  .then(response => {
-    selectedCustomer.bookRoom(response);
-    bookings.push(new Booking(response));
-    console.log(bookings);
-    console.log(selectedCustomer.bookings)
-    return fetchData();
-  })
-  .then(refreshDOM);
+    .then((response) => {
+      selectedCustomer.bookRoom(response);
+      bookings.push(new Booking(response));
+      console.log(bookings);
+      console.log(selectedCustomer.bookings);
+      return fetchData();
+    })
+    .then(refreshDOM);
 }
 
 function refreshDOM() {
@@ -168,7 +173,7 @@ function refreshDOM() {
 }
 
 export function errorHandler(error) {
-  errorMessage.classList.remove('hidden');
+  errorMessage.classList.remove("hidden");
   errorMessage.textContent = `Uh-oh! Something went wrong! Try again Later!`;
   console.log(error);
 }
