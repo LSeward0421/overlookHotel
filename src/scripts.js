@@ -36,7 +36,7 @@ loginForm.addEventListener("submit", (event) => {
 // functions
 
 function fetchData() {
-  Promise.all([getData("customers"), getData("rooms"), getData("bookings")])
+  return Promise.all([getData("customers"), getData("rooms"), getData("bookings")])
     .then(([customersData, roomsData, bookingsData]) => {
       customers = customersData.customers.map(
         (customer) => new Customer(customer)
@@ -150,13 +150,19 @@ function postBooking(selectedRoomNumber) {
     date: selectedDate,
     roomNumber: parseInt(selectedRoomNumber),
   };
-  postData(bookingData, selectedCustomer, bookings).then(() => {
-    fetchData();
-    setTimeout(() => {
-      searchRooms();
-      displayUserBookings(selectedCustomer);
-      displayTotalSpent();
-    }, 200);
-  });
+  postData(bookingData)
+  .then(response => {
+    selectedCustomer.bookRoom(response);
+    bookings.push(new Booking(response));
+    console.log(bookings);
+    console.log(selectedCustomer.bookings)
+    return fetchData();
+  })
+  .then(refreshDOM);
 }
 
+function refreshDOM() {
+  searchRooms();
+  displayUserBookings(selectedCustomer);
+  displayTotalSpent();
+}

@@ -58,6 +58,16 @@ form {
   align-items: center;
 }
 
+#login {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#loginHeader {
+  display: flex;
+}
+
 label {
   font-size: 1.2em;
   flex-basis: 100%;
