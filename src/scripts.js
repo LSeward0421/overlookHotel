@@ -149,6 +149,7 @@ function postBooking(selectedRoomNumber) {
     date: selectedDate,
     roomNumber: parseInt(selectedRoomNumber),
   };
+  errorMessage.classList.add('hidden');
   postData(bookingData)
   .then(response => {
     selectedCustomer.bookRoom(response);
