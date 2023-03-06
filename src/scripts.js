@@ -14,6 +14,7 @@ const totalSpent = document.querySelector("#totalSpent");
 const loginForm = document.querySelector("#login");
 const loginErrorMsg = document.querySelector("#loginErrorMessage");
 const mainContent = document.querySelector(".container");
+const errorMessage = document.querySelector('#errorMessage')
 
 let customers, rooms, bookings, selectedCustomer, availableRooms;
 
@@ -45,9 +46,7 @@ function fetchData() {
       bookings = bookingsData.bookings.map((booking) => new Booking(booking));
       return { customers, rooms, bookings };
     })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch(errorHandler);
 }
 
 function searchRooms() {
@@ -165,4 +164,10 @@ function refreshDOM() {
   searchRooms();
   displayUserBookings(selectedCustomer);
   displayTotalSpent();
+}
+
+export function errorHandler(error) {
+  errorMessage.classList.remove('hidden');
+  errorMessage.textContent = `Uh-oh! Something went wrong! Try again Later!`;
+  console.log(error);
 }

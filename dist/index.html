@@ -19,9 +19,10 @@
         <h2>You're dying to stay with us.</h2>
       </div>
     </header>
+    <p id="errorMessage" class="hidden"></p>
     <div class="container hidden" role="main">
       <section id="bookARoom">
-        <h2 id="bookARoom">Book a Room</h2>
+        <h2>Book a Room</h2>
         <form aria-labelledby="bookARoom">
           <label for="date">Select a Date:</label>
           <input type="date" id="date" name="date" />
@@ -35,8 +36,7 @@
           <button id="searchRooms">Search Rooms</button>
         </form>
         <h3>Available Rooms:</h3>
-        <ul id="available-rooms">
-        </ul>
+        <ul id="available-rooms"></ul>
         <p id="noRoomMsg"></p>
       </section>
       <section id="bookings">
@@ -48,24 +48,28 @@
               <th>Room Number</th>
             </tr>
           </thead>
-          <tbody id="bookingDetails">
-          </tbody>
+          <tbody id="bookingDetails"></tbody>
         </table>
         <p>Total amount spent: <span id="totalSpent"></span></p>
       </section>
-    </div>  
-      <section id="login">
-        <h2 id="loginHeader">Login</h2>
-        <form>
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username">
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password">
-          <button id="loginBtn">Log In</button>
-        </form>
-        <p id="loginErrorMessage" class="hidden">Wrong username or password. Please verify and try again.</p>
-      </section>
+    </div>
+    <div id="login">
+      <div class="login-container">
+        <section class="login-content">
+          <h2 id="loginHeader">Login</h2>
+          <form class="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" />
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" />
+            <button id="loginBtn">Log In</button>
+          </form>
+          <p id="loginErrorMessage" class="hidden">
+            Wrong username or password. Please verify and try again.
+          </p>
+        </section>
+      </div>
+    </div>
     <script src="bundle.js"></script>
   </body>
 </html>
-

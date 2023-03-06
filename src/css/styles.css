@@ -21,6 +21,24 @@ header {
   text-shadow: 2px 2px 5px #000;
 }
 
+.login-container {
+  display:flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.login-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
+.login-form {
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
 .container {
   display: flex;
   justify-content: space-between;
@@ -31,6 +49,11 @@ header {
 #bookARoom,
 #bookings {
   width: 45%;
+}
+
+#bookings > p {
+  color: #d34242;
+  font-size: larger;
 }
 
 h1 {
@@ -56,16 +79,6 @@ form {
   flex-wrap: wrap;
   gap: 1em;
   align-items: center;
-}
-
-#login {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-
-#loginHeader {
-  display: flex;
 }
 
 label {
@@ -124,7 +137,7 @@ table {
 th,
 td {
   padding: 0.5em;
-  text-align: left;
+  text-align: center;
 }
 
 th {
