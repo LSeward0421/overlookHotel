@@ -2,7 +2,7 @@ import "./css/styles.css";
 import Customer from "./Customer";
 import Room from "./Room";
 import Booking from "./Booking";
-import { getData, postData, deleteData } from "./api-calls";
+import { getData, postData } from "./api-calls";
 
 // query selectors
 const dateInput = document.querySelector("#date");
@@ -126,7 +126,6 @@ function verifyLogin() {
 }
 
 function setCustomer(customerId) {
-  clearSelectedCustomer();
   return getData(`customers/${customerId}`)
     .then((customerData) => {
       selectedCustomer = new Customer(customerData);
@@ -182,12 +181,6 @@ export function errorHandler(error) {
   errorMessage.classList.remove("hidden");
   errorMessage.textContent = `Uh-oh! Something went wrong! Try again Later!`;
   console.log(error);
-}
-
-function clearSelectedCustomer() {
-  selectedCustomer = null;
-  bookingDetails.innerHTML = "";
-  totalSpent.textContent = "";
 }
 
 function setMinDateInput(dateInput) {
