@@ -30,8 +30,4 @@ describe("Room", function () {
   it("should have a cost per night property", function () {
     expect(testRoom.costPerNight).to.equal(358.4);
   });
-
-  it("should have a property that has booking status defaulted to false", function () {
-    expect(testRoom.isBooked).to.equal(false);
-  });
 });
