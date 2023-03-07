@@ -20,8 +20,9 @@ let customers, rooms, bookings, selectedCustomer, availableRooms;
 
 // event listeners
 
-window.addEventListener("load", () => {
-  fetchData();
+  window.addEventListener('load', () => {
+    setMinDateInput(dateInput)
+    fetchData();
 });
 
 searchRoomsBtn.addEventListener("click", (event) => {
@@ -189,3 +190,18 @@ function clearSelectedCustomer() {
   totalSpent.textContent = "";
 }
 
+function setMinDateInput(dateInput) {
+  const currentDate = new Date();
+  const timezoneOffsetInMs = currentDate.getTimezoneOffset() * 60000;
+  const minDate = new Date(currentDate.getTime() - timezoneOffsetInMs);
+  const formattedMinDate = reformatDate(minDate);
+  dateInput.setAttribute('value', formattedMinDate);
+  dateInput.setAttribute('min', formattedMinDate);
+}
+
+function reformatDate(date) {
+  const year = date.toLocaleString("default", { year: "numeric" });
+  const month = date.toLocaleString("default", { month: "2-digit" });
+  const day = date.toLocaleString("default", { day: "2-digit" });
+  return `${year}-${month}-${day}`;
+}
