@@ -116,7 +116,6 @@ function verifyLogin() {
 }
 
 function setCustomer(customerId) {
-  clearSelectedCustomer();
   return getData(`customers/${customerId}`)
     .then((customerData) => {
       selectedCustomer = new Customer(customerData);
@@ -174,9 +173,4 @@ export function errorHandler(error) {
   console.log(error);
 }
 
-function clearSelectedCustomer() {
-  selectedCustomer = null;
-  bookingDetails.innerHTML = "";
-  totalSpent.textContent = "";
-}
 
