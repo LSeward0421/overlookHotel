@@ -1,4 +1,3 @@
-import Booking from "./Booking"
 import { errorHandler } from "./scripts";
 
 function getData (type) {
@@ -29,15 +28,7 @@ function postData(postObj) {
       return response.json();
     })
     .catch(errorHandler);
-}
-
-function deleteData(id) {
-  return fetch(`http://localhost:3001/api/v1/bookings/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-type': 'application/json'
-    }
-  });
 };
 
-export { getData, postData, deleteData };
+
+export { getData, postData };

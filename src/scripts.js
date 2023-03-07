@@ -2,7 +2,7 @@ import "./css/styles.css";
 import Customer from "./Customer";
 import Room from "./Room";
 import Booking from "./Booking";
-import { getData, postData, deleteData } from "./api-calls";
+import { getData, postData } from "./api-calls";
 
 // query selectors
 const dateInput = document.querySelector("#date");
@@ -20,8 +20,9 @@ let customers, rooms, bookings, selectedCustomer, availableRooms;
 
 // event listeners
 
-window.addEventListener("load", () => {
-  fetchData();
+  window.addEventListener('load', () => {
+    setMinDateInput(dateInput)
+    fetchData();
 });
 
 searchRoomsBtn.addEventListener("click", (event) => {
@@ -33,6 +34,15 @@ loginForm.addEventListener("submit", (event) => {
   event.preventDefault();
   verifyLogin();
 });
+
+dateInput.addEventListener("change", () => {
+  availableRoomsList.innerHTML = "";
+});
+
+roomTypeSelect.addEventListener("change", () => {
+  availableRoomsList.innerHTML = "";
+});
+
 
 // functions
 
@@ -116,7 +126,6 @@ function verifyLogin() {
 }
 
 function setCustomer(customerId) {
-  clearSelectedCustomer();
   return getData(`customers/${customerId}`)
     .then((customerData) => {
       selectedCustomer = new Customer(customerData);
@@ -174,9 +183,18 @@ export function errorHandler(error) {
   console.log(error);
 }
 
-function clearSelectedCustomer() {
-  selectedCustomer = null;
-  bookingDetails.innerHTML = "";
-  totalSpent.textContent = "";
+function setMinDateInput(dateInput) {
+  const currentDate = new Date();
+  const timezoneOffsetInMs = currentDate.getTimezoneOffset() * 60000;
+  const minDate = new Date(currentDate.getTime() - timezoneOffsetInMs);
+  const formattedMinDate = reformatDate(minDate);
+  dateInput.setAttribute('value', formattedMinDate);
+  dateInput.setAttribute('min', formattedMinDate);
 }
 
+function reformatDate(date) {
+  const year = date.toLocaleString("default", { year: "numeric" });
+  const month = date.toLocaleString("default", { month: "2-digit" });
+  const day = date.toLocaleString("default", { day: "2-digit" });
+  return `${year}-${month}-${day}`;
+}
