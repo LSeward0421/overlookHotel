@@ -34,6 +34,15 @@ loginForm.addEventListener("submit", (event) => {
   verifyLogin();
 });
 
+dateInput.addEventListener("change", () => {
+  availableRoomsList.innerHTML = "";
+});
+
+roomTypeSelect.addEventListener("change", () => {
+  availableRoomsList.innerHTML = "";
+});
+
+
 // functions
 
 function fetchData() {
