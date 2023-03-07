@@ -116,13 +116,13 @@ function verifyLogin() {
 }
 
 function setCustomer(customerId) {
+  clearSelectedCustomer();
   return getData(`customers/${customerId}`)
     .then((customerData) => {
-      console.log("get single customer data", customerData);
       selectedCustomer = new Customer(customerData);
-      console.log(customerData);
       displayUserBookings(selectedCustomer);
       displayTotalSpent();
+      return fetchData();
     })
     .catch((error) => console.log(error));
 }
@@ -130,7 +130,6 @@ function setCustomer(customerId) {
 
 function displayUserBookings(customer) {
   let customerBookings = customer.myBookings(bookings);
-  console.log(customerBookings);
   bookingDetails.innerHTML = "";
   customerBookings.forEach((booking) => {
     const row = document.createElement("tr");
@@ -144,7 +143,6 @@ function displayUserBookings(customer) {
 function displayTotalSpent() {
   selectedCustomer.calculateTotalSpent(rooms);
   totalSpent.textContent = `$${selectedCustomer.totalSpent.toFixed(2)}`;
-  console.log("selectedCustomer.totalSpent:", selectedCustomer.totalSpent);
 }
 
 function postBooking(selectedRoomNumber) {
@@ -159,8 +157,6 @@ function postBooking(selectedRoomNumber) {
     .then((response) => {
       selectedCustomer.bookRoom(response);
       bookings.push(new Booking(response));
-      console.log(bookings);
-      console.log(selectedCustomer.bookings);
       return fetchData();
     })
     .then(refreshDOM);
@@ -177,3 +173,10 @@ export function errorHandler(error) {
   errorMessage.textContent = `Uh-oh! Something went wrong! Try again Later!`;
   console.log(error);
 }
+
+function clearSelectedCustomer() {
+  selectedCustomer = null;
+  bookingDetails.innerHTML = "";
+  totalSpent.textContent = "";
+}
+
