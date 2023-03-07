@@ -118,6 +118,7 @@ function verifyLogin() {
       .then(() => {
         mainContent.classList.remove("hidden");
         loginForm.classList.add("hidden");
+        displayLoginMessage(selectedCustomer);
       })
       .catch((error) => console.log(error));
   } else {
@@ -134,6 +135,12 @@ function setCustomer(customerId) {
       return fetchData();
     })
     .catch((error) => console.log(error));
+}
+
+function displayLoginMessage(customer) {
+  const greeting = document.createElement("p");
+  greeting.innerText = `Well hello there, ${customer.name}! Welcome!`;
+  mainContent.prepend(greeting);
 }
 
 
